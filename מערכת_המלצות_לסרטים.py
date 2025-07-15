@@ -8,10 +8,10 @@ def get_movies():
     :return: list of movies
     """
     movies = []
-    movie = input('Enter a movie title: ')
+    movie = input('Enter a movie title (to finish, enter "end"): ')
     while not movie == 'end':
         movies.append(movie)
-        movie = input('Enter a movie title: ')
+        movie = input('Enter a movie title (to finish, enter "end"): ')
     return movies
 
 def get_ratings(movies):
@@ -21,7 +21,6 @@ def get_ratings(movies):
     :return: dictionary of movies with ratings
     """
     ratings = {}
-    print('Rate each movie:')
     for movie in movies:
         rating = input(f'Enter a movie rating (1-10) for "{movie}": ')
         ratings.update({movie: int(rating)})
@@ -38,6 +37,37 @@ def get_genres(ratings):
         ratings.update({movie: (ratings[movie], genre)})
     return ratings
 
+def get_user_favs():
+    """
+    This function gets a list of favorite movie genres from the user.
+    :return: list of genres
+    """
+    fav_genres = []
+    genre = 'genre'
+    while not genre == 'end':
+        genre = input('Enter a favorite genre (to finish, enter "end"): ')
+        if genre == 'end':
+            break
+        fav_genres.append(genre)
+    return fav_genres
+
+def recommend_movies(movie_genres, fav_genres):
+    """
+    This function recommends movies based on the user's favorite movie genres.
+    :param movie_genres: dictionary of movies with ratings and genres
+    :param fav_genres: user's favorite genres
+    :return: dictionary of movie recommendations
+    """
+    recommended = {}
+    for fav_genre in fav_genres:
+        matching_movies = {movie: (rating, genre) for movie, (rating, genre) in movie_genres.items() if genre == fav_genre}
+        if matching_movies:
+            highest_rating = max(rating for rating, genre in matching_movies.values())
+            for movie in matching_movies:
+                if matching_movies[movie][0] == highest_rating:
+                    recommended.update({movie: matching_movies[movie]})
+    return recommended
+
 def main():
     # Print list of movies:
     movies = get_movies()
@@ -53,6 +83,13 @@ def main():
 
     # Add genre to each movie:
     movie_genres = get_genres(movie_ratings)
+
+    # Get list of favorite genres from user:
+    user_fav_genres = get_user_favs()
+
+    # Recommend movies based on favorite genres from user and ratings:
+    recommended_movies = recommend_movies(movie_genres, user_fav_genres)
+    print(f'Recommended movies: {list(recommended_movies.keys())}')
 
 if __name__ == '__main__':
     main()
