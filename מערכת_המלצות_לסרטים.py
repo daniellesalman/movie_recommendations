@@ -1,6 +1,18 @@
 """
 This program is a system for movie recommendations.
 """
+class User:
+    def __init__(self, username):
+        self.username = username
+        self.movies = {}
+        self.fav_genres = []
+
+    def add_movies(self, movies):
+        self.movies.update(movies)
+
+    def add_fav_genres(self, genres):
+        self.fav_genres.extend(genres)
+
 
 def get_movies():
     """
@@ -12,6 +24,7 @@ def get_movies():
     while not movie == 'end':
         movies.append(movie)
         movie = input('Enter a movie title (to finish, enter "end"): ')
+    print(movies)
     return movies
 
 def get_ratings(movies):
@@ -69,27 +82,29 @@ def recommend_movies(movie_genres, fav_genres):
     return recommended
 
 def main():
+    username = input('Enter username: ')
+    user = User(username)
     # Print list of movies:
-    movies = get_movies()
-    print(movies)
+    user.add_movies(get_genres(get_ratings(get_movies())))
+    print(user.movies)
 
     # Add rating to each movie:
-    movie_ratings = get_ratings(movies)
+    # movie_ratings = get_ratings(movies)
 
     # Print average, max, and min ratings:
-    print(f'Average rating: \033[93m{sum(movie_ratings.values()) / len(movie_ratings)}\033[0m')
-    print(f'Max rating: \033[92m{max(movie_ratings.values())}\033[0m')
-    print(f'Min rating: \033[91m{min(movie_ratings.values())}\033[0m')
+    print(f'Average rating: \033[93m{sum([value[0] for value in user.movies.values()]) / len(user.movies)}\033[0m')
+    print(f'Max rating: \033[92m{max([value[0] for value in user.movies.values()])}\033[0m')
+    print(f'Min rating: \033[91m{min(value[0] for value in user.movies.values())}\033[0m')
 
     # Add genre to each movie:
-    movie_genres = get_genres(movie_ratings)
+    # movie_genres = get_genres(movie_ratings)
 
     # Get list of favorite genres from user:
-    user_fav_genres = get_user_favs()
+    user.add_fav_genres(get_user_favs())
 
     # Recommend movies based on favorite genres from user and ratings:
-    recommended_movies = recommend_movies(movie_genres, user_fav_genres)
-    print(f'Recommended movies: {list(recommended_movies.keys())}')
+    recommended_movies = recommend_movies(user.movies, user.fav_genres)
+    print(f'Recommended movies: {recommended_movies}')
 
 if __name__ == '__main__':
     main()
