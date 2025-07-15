@@ -152,6 +152,7 @@ def main():
     else:
         print('No recommendations.')
 
+    # Recommend movies based on similar user's recommendations:
     smart_recommendations = collaborative_recommendations(user, users)
     print('Recommendations from similar users:')
     if smart_recommendations:
