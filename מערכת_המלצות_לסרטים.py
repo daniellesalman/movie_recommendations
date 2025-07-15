@@ -24,13 +24,18 @@ def get_ratings(movies):
     print('Rate each movie:')
     for movie in movies:
         rating = input(f'Enter a movie rating (1-10) for "{movie}": ')
-        ratings.update({movie: rating})
+        ratings.update({movie: int(rating)})
     return ratings
 
 def main():
     movies = get_movies()
     print(movies)
     movie_ratings = get_ratings(movies)
+
+    # Print average, max, and min ratings:
+    print(f'Average rating: \033[93m{sum(movie_ratings.values()) / len(movie_ratings)}\033[0m')
+    print(f'Max rating: \033[92m{max(movie_ratings.values())}\033[0m')
+    print(f'Min rating: \033[91m{min(movie_ratings.values())}\033[0m')
 
 if __name__ == '__main__':
     main()
